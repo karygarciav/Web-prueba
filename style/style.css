@@ -1,0 +1,24 @@
+
+div{
+   
+    width: 650px;
+    height: 30px;
+    font: 13px Arial, sans-serif;
+
+}
+
+div span {
+    display: inline-block;
+    width: 200px;
+
+}
+
+div input{
+    width: 200px;
+
+}
+
+button{
+
+    margin-left: 200px;
+}
