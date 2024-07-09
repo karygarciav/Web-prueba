@@ -1,5 +1,4 @@
 let finalData = [];
-
 function procesar() {
 
 
@@ -19,10 +18,8 @@ function procesar() {
 
     console.log(registro);
 
-        document.getElementById('impresionNombre').innerHTML =`Nombre: ${registro.nombre}` ;
-        document.getElementById('impresionCedula').innerHTML =`Identificación: ${registro.identificacion}` ;
 
-        for (let i = 1; i < dato; i++) {
+    for (let i = 1; i < dato; i++) {
 
         registro.products.push(
             {
@@ -34,51 +31,56 @@ function procesar() {
 
     }
 
-     //Impresion en tabla
-    
-    for(let i=0;i<dato-1;i++){
+    printBill(registro);
 
-    let resultadosBody = document.getElementById('resultadosBody').insertRow(0);
-    let col1 = resultadosBody.insertCell(0);
-    let col2 = resultadosBody.insertCell(1);
-
-    col1.innerHTML = registro.products[i].producto;
-    col2.innerHTML = registro.products[i].numero;
-    
-    }
-
-   finalData.push(registro);
+    finalData.push(registro);
     console.log(finalData);
 }
 
+function printBill(data) {
 
-function insertarFila() {
-
+    let tblDatos = document.getElementById('tblDatos');
     let dato = document.getElementById('tblDatos').rows.length;
-    let tblDatos = document.getElementById('tblDatos').insertRow(dato);
-    let col1 = tblDatos.insertCell(0);
-    let col2 = tblDatos.insertCell(1);
-    let col3 = tblDatos.insertCell(2);
-    let col4 = tblDatos.insertCell(3);
+    //Impresion en tabla
 
-    col1.innerHTML = `<input type="number" name="idProducto" id=idProducto${dato}  value= ${dato} class="form-control">`;
-    col2.innerHTML = `<input type="text" name="datoProducto" id=producto${dato}  class="form-control">`;
-    col3.innerHTML = `<input type="number" name="datoNumero" id=numero${dato}  class="form-control">`;
-    col4.innerHTML = `<input type="number" name="datoValor" id=valor${dato} class="form-control">`;
 
+    let resultadosBody = document.getElementById('resultadosBody').insertRow(0);
+    let col1 = resultadosBody.insertCell(  0);
+    let col2 = resultadosBody.insertCell(  1);
+    let col3 = resultadosBody.insertCell(  2);
+    col1.innerHTML = data.nombre;
+    col2.innerHTML = data.identificacion;
+    col3.innerHTML = data.products.length;
 
 }
+
+function insertarFila(){
+
+            let dato = document.getElementById('tblDatos').rows.length;
+            let tblDatos = document.getElementById('tblDatos').insertRow(dato);
+            let col1 = tblDatos.insertCell(0);
+            let col2 = tblDatos.insertCell(1);
+            let col3 = tblDatos.insertCell(2);
+            let col4 = tblDatos.insertCell(3);
+
+            col1.innerHTML = `<input type="number" name="idProducto" id=idProducto${dato}  value= ${dato} class="form-control">`;
+            col2.innerHTML = `<input type="text" name="datoProducto" id=producto${dato}  class="form-control">`;
+            col3.innerHTML = `<input type="number" name="datoNumero" id=numero${dato}  class="form-control">`;
+            col4.innerHTML = `<input type="number" name="datoValor" id=valor${dato} class="form-control">`;
+
+
+    }
 
 function eliminarFila() {
-    //Preguntar que numero de id quiera borrar
-    let NumeroEliminar = parseInt(prompt('Digite en numero de registro que quiere eliminar:'));
+        //Preguntar que numero de id quiera borrar
+        let NumeroEliminar = parseInt(prompt('Digite en numero de registro que quiere eliminar:'));
 
-    //Eliminar row
-    const tr = document.getElementById('tblDatos');
-    tr.deleteRow(NumeroEliminar);
-    console.log("Eliminado");
+        //Eliminar row
+        const tr = document.getElementById('tblDatos');
+        tr.deleteRow(NumeroEliminar);
+        console.log("Eliminado");
 
-}
+    }
 
 function guardarFila() {
     //Obtener tabla y numero de rows
@@ -96,8 +98,7 @@ function guardarFila() {
     tblDatos.rows[dato - 1].cells[1].innerHTML = producto;
     tblDatos.rows[dato - 1].cells[2].innerHTML = numero;
     tblDatos.rows[dato - 1].cells[3].innerHTML = valor;
-
-}
+    }
 
 
 
