@@ -9,14 +9,14 @@
     <script type="text/javascript" src="script/main.js"></script>
 
     <noscript>You need to enable JavaScript to view the web </noscript>
-    <title>Formulario</title>
+    <title>FACTURA</title>
 </head>
 <body>
         <br/>
+    <div class="container p-3 mt-5 shadow border" >
+        <h1 class="display-3">FACTURA</h1>
     <div class="container">
-        <h1 class="display-3">Formulario</h1>
-    <div class="container">
-        <Form action="javascript:void(0)" id="form1" class="p-3 mt-5 shadow border" onsubmit='procesar()' >
+        <Form action="javascript:void(0)" id="form1"onsubmit='procesar()' >
             <div class="row">
                 <div class="col">
                     <div class="form-group">
@@ -50,7 +50,7 @@
 
                 <div class="col">
                 <div class="form-group">
-                <label class="form label 1" id="fechaNacimiento">
+                <label class="form label 1"  id="fechaNacimiento">
                     Fecha Nacimiento :
                     <input type="date" name="fechaNacimientoDato" id="fechaNacimiento" class="form-control">
                 </label>
@@ -74,24 +74,24 @@
         </Form>
 
 
-    </div>
 
-    </div>
 
-    <div class="container">
-        <h1 class="display-3 mt-5 ">Tabla</h1>
 
-        <div class="container">
-            <table class="table" id="tblDatos">
+
+
+        <h2 class="display-6 mt-3 ">Compra</h2>
+
+
+            <table class="table mt-2"  id="tblDatos">
                 <thead>
                 <tr>
                     <th scope="col" >ID</th>
-                    <th scope="col" >Nombre</th>
-                    <th scope="col">numero</th>
-                    <th scope="col">Email</th>
+                    <th scope="col" >Producto</th>
+                    <th scope="col">Numero</th>
+                    <th scope="col">Valor</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody >
 
                 </tbody>
 
@@ -101,10 +101,10 @@
             <input type="button"  onclick="guardarFila()" value="Guardar" class="btn btn-primary mt-3 ">
             <input type="button"  onclick="eliminarFila()" value="Eliminar" class="btn btn-danger mt-3 ">
 
-
-        </div>
+    </div>
 
     </div>
+
 
 </body>
 </html>
