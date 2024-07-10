@@ -1,16 +1,30 @@
 
 
-
-
-
-
-
-
-
 let finalData = [];
 
+$(function() {
+
+        $("#btnDelete").hide();
+        $("#btnSave").hide();
+
+        $("#btnPlus").click( function(){
+        $("#btnPlus").hide();
+        $("#btnDelete").show();
+        });
+
+
+
+
+
+
+
+
+
+
+});
 
     function process() {
+
 
 
             let tblLength = datalength();
@@ -86,6 +100,7 @@ let finalData = [];
 
     function insertRow(){
 
+            $("#btnSave").show();
             let tblLength = datalength();
             let tblBuys = document.getElementById('tblBuys').insertRow(tblLength);
 
@@ -98,6 +113,8 @@ let finalData = [];
             cell2.innerHTML = `<input type="text" name="datoProducto" id=product${tblLength}  class="form-control">`;
             cell3.innerHTML = `<input type="number" name="datoNumero" id=numberP${tblLength}  class="form-control">`;
             cell4.innerHTML = `<input type="number" name="price" id=price${tblLength} class="form-control">`;
+
+
 
 
     }
@@ -117,6 +134,7 @@ let finalData = [];
     }
 
     function saveRow() {
+        $("#btnSave").hide();
         //Obtener tabla y numero de rows
         let tblLength = datalength();
         let tblBuys = document.getElementById('tblBuys');
@@ -132,6 +150,9 @@ let finalData = [];
         tblBuys.rows[tblLength - 1].cells[1].innerHTML = product;
         tblBuys.rows[tblLength - 1].cells[2].innerHTML = numberP;
         tblBuys.rows[tblLength - 1].cells[3].innerHTML = price;
+
+        $("#btnPlus").show();
+
 
     }
 
