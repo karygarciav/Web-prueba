@@ -2,8 +2,11 @@
 
 let finalData = [];
 
+
+
 $(function() {
 
+    //Mostrar y esconder botones de agregar
         $("#btnDelete").hide();
         $("#btnSave").hide();
 
@@ -11,6 +14,19 @@ $(function() {
         $("#btnPlus").hide();
         $("#btnDelete").show();
         });
+
+    //Inicializando Botones
+
+    $("#btnPlus").click(function (){
+        insertRow();
+    });
+    $("#btnSave").click(function (){
+        saveRow();
+    });
+    $("#btnDelete").click(function (){
+        deleteRow();
+    });
+
 
 
 
@@ -24,8 +40,6 @@ $(function() {
 });
 
     function process() {
-
-
 
             let tblLength = datalength();
 
@@ -43,11 +57,15 @@ $(function() {
 
             }
 
+
+
     }
 
-    function datalength() {
 
-       let tblLength = document.getElementById('tblBuys').rows.length;
+
+    function datalength() {
+       // var nRow = $("#tblBuys tr").length;
+       let tblLength = $('#tblBuys tr').length;
 
         return tblLength;
     }
@@ -57,12 +75,23 @@ $(function() {
         let tblBuys = document.getElementById('tblBuys');
         let tblLength = datalength();
         const form1 = document.forms['form1'];
+        let nombre2= $("input:text[name=name]").val();
+
+        console.log(nombre2);
+
         const register = {
+
+            "name": $("input:text[name=name]").val(),
+            "active": $("input[type=checkbox][name=active]").val(),
+            "email": $("input[type=email][name=email]").val(),
+            "identification":$("input[type=number][name=identification]").val(),
+            "dayBirth": $("input[type=date][name=dayBirth]").val(),
+/*
         "name": form1.elements[0].value,
         "active": form1.elements[1].value,
         "email": form1.elements[2].value,
         "identification": form1.elements[4].value,
-        "dayBirth": form1.elements[5].value,
+        "dayBirth": form1.elements[5].value,*/
         products: []
         };
 
@@ -120,15 +149,14 @@ $(function() {
     }
 
     function deleteRow() {
+
         //Preguntar que numero de id quiera borrar
-        let deletItem = parseInt(prompt('Digite en numero de registro que quiere eliminar:'));
+            let deletItem = parseInt(prompt('Digite en numero de registro que quiere eliminar:'));
 
         //Eliminar row
-        const tr = document.getElementById('tblBuys');
-        console.log(tr);
-        tr.deleteRow(deletItem);
-        window.alert('Dato ha sido Eliminado');
-
+            const tr = document.getElementById('tblBuys');
+            tr.deleteRow(deletItem);
+            window.alert('Dato ha sido Eliminado');
 
 
     }
