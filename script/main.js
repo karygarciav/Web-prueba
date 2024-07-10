@@ -1,25 +1,53 @@
 let finalData = [];
-function procesar() {
 
 
-    //Hacer un objeto del formulario
-    let tblDatos = document.getElementById('tblDatos');
-    let dato = document.getElementById('tblDatos').rows.length;
-    const formulario = document.forms['form1'];
-    const registro = {
+    function procesar() {
+
+            let dato = datolength();
+
+            //Hacer un objeto del formulario
+            if (dato > 1) {
+
+                const registro = saveform();
+                printBill(registro);
+                finalData.push(registro);
+                console.log(finalData);
+
+            } else {
+
+                window.alert('Tiene que guardar al menos un dato de compra');
+
+            }
+
+    }
+
+    function datolength() {
+
+        let tblDatos = document.getElementById('tblDatos');
+        let dato = document.getElementById('tblDatos').rows.length;
+
+        return dato;
+    }
+
+    function saveform() {
+
+        let tblDatos = document.getElementById('tblDatos');
+        let dato = datolength();
+        const formulario = document.forms['form1'];
+        const registro = {
         "nombre": formulario.elements[0].value,
         "activo": formulario.elements[1].value,
         "email": formulario.elements[2].value,
         "identificacion": formulario.elements[4].value,
         "fechaNacimiento": formulario.elements[5].value,
         products: []
-    };
-    //Mostrar en consola Arreglo
+        };
 
-    console.log(registro);
+        //Mostrar en consola Arreglo
 
+        console.log(registro);
 
-    for (let i = 1; i < dato; i++) {
+        for (let i = 1; i < dato; i++) {
 
         registro.products.push(
             {
@@ -27,22 +55,19 @@ function procesar() {
                 'numero': tblDatos.rows[i].cells[2].innerHTML,
                 'valor': tblDatos.rows[i].cells[3].innerHTML,
             }
-        );
+                );
 
-    }
+            }
+        return registro;
+        }
 
-    printBill(registro);
+    function printBill(data) {
 
-    finalData.push(registro);
-    console.log(finalData);
-}
+    let dato = datolength();
 
-function printBill(data) {
 
-    let tblDatos = document.getElementById('tblDatos');
-    let dato = document.getElementById('tblDatos').rows.length;
+
     //Impresion en tabla
-
 
     let resultadosBody = document.getElementById('resultadosBody').insertRow(0);
     let col1 = resultadosBody.insertCell(  0);
@@ -52,18 +77,19 @@ function printBill(data) {
     col2.innerHTML = data.identificacion;
     col3.innerHTML = data.products.length;
 
-}
+    }
 
-function insertarFila(){
+    function insertRow(){
 
-            let dato = document.getElementById('tblDatos').rows.length;
+            let dato = datolength();
             let tblDatos = document.getElementById('tblDatos').insertRow(dato);
+
             let col1 = tblDatos.insertCell(0);
             let col2 = tblDatos.insertCell(1);
             let col3 = tblDatos.insertCell(2);
             let col4 = tblDatos.insertCell(3);
 
-            col1.innerHTML = `<input type="number" name="idProducto" id=idProducto${dato}  value= ${dato} class="form-control">`;
+            col1.innerHTML = `<input disabled type="number" name="idProducto" id=idProducto${dato}  value= ${dato} class="form-control">`;
             col2.innerHTML = `<input type="text" name="datoProducto" id=producto${dato}  class="form-control">`;
             col3.innerHTML = `<input type="number" name="datoNumero" id=numero${dato}  class="form-control">`;
             col4.innerHTML = `<input type="number" name="datoValor" id=valor${dato} class="form-control">`;
@@ -71,34 +97,39 @@ function insertarFila(){
 
     }
 
-function eliminarFila() {
+    function deleteRow() {
         //Preguntar que numero de id quiera borrar
         let NumeroEliminar = parseInt(prompt('Digite en numero de registro que quiere eliminar:'));
 
         //Eliminar row
         const tr = document.getElementById('tblDatos');
         tr.deleteRow(NumeroEliminar);
-        console.log("Eliminado");
+        window.alert('Dato ha sido Eliminado');
+
 
     }
 
-function guardarFila() {
-    //Obtener tabla y numero de rows
-    let dato = document.getElementById('tblDatos').rows.length;
-    let tblDatos = document.getElementById('tblDatos');
-    //Consultar Valores que se llenan en tablas
-    let idProducto = document.getElementById(`idProducto${dato - 1}`).value;
-    let producto = document.getElementById(`producto${dato - 1}`).value;
-    let numero = document.getElementById(`numero${dato - 1}`).value;
-    let valor = document.getElementById(`valor${dato - 1}`).value;
+    function guardarFila() {
+        //Obtener tabla y numero de rows
+        let dato = datolength();
+        let tblDatos = document.getElementById('tblDatos');
 
-    //Asignar en tabla valores
-    // tblDatos.rows[dato-1].cells[0].innerHTML=`<p id=idProducto${dato-1}>${dato-1}</p>`;
-    tblDatos.rows[dato - 1].cells[0].innerHTML = idProducto;
-    tblDatos.rows[dato - 1].cells[1].innerHTML = producto;
-    tblDatos.rows[dato - 1].cells[2].innerHTML = numero;
-    tblDatos.rows[dato - 1].cells[3].innerHTML = valor;
+        //Consultar Valores que se llenan en tablas
+        let idProducto = document.getElementById(`idProducto${dato - 1}`).value;
+        let producto = document.getElementById(`producto${dato - 1}`).value;
+        let numero = document.getElementById(`numero${dato - 1}`).value;
+        let valor = document.getElementById(`valor${dato - 1}`).value;
+
+        //Asignar en tabla valores
+        tblDatos.rows[dato - 1].cells[0].innerHTML = idProducto;
+        tblDatos.rows[dato - 1].cells[1].innerHTML = producto;
+        tblDatos.rows[dato - 1].cells[2].innerHTML = numero;
+        tblDatos.rows[dato - 1].cells[3].innerHTML = valor;
+
     }
+
+
+
 
 
 

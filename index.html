@@ -90,8 +90,8 @@
         <h2 class="display-6 mt-3 ">Compra</h2>
 
 
-        <table class="table mt-2" id="tblDatos">
-            <thead>
+        <table class="table mt-2 text-center" id="tblDatos">
+            <thead class="text-center">
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Producto</th>
@@ -105,9 +105,9 @@
 
         </table>
 
-        <input type="button" onclick="insertarFila()" value="+" class="btn btn-secondary mt-3 ">
+        <input type="button" onclick="insertRow()" value="+" class="btn btn-secondary mt-3 ">
         <input type="button" onclick="guardarFila()" value="Guardar" class="btn btn-primary mt-3 ">
-        <input type="button" onclick="eliminarFila()" value="Eliminar" class="btn btn-danger mt-3 ">
+        <input type="button" onclick="deleteRow()" value="Eliminar" class="btn btn-danger mt-3 ">
 
     </div>
 </div>
@@ -117,7 +117,7 @@
         <h3 class="display-6 mt-3 ">Resultado</h3>
     </div>
 
-    <table class="table" id="resultadosFinales">
+    <table class="table text-center" id="resultadosFinales">
         <thead>
         <tr>
             <th scope="col">Persona</th>
@@ -125,7 +125,7 @@
             <th scope="col">Total Productos Comprados</th>
         </tr>
         </thead>
-        <tbody id="resultadosBody" class=".table-striped">
+        <tbody id="resultadosBody" class="text-center">
 
 
         </tbody>
