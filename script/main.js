@@ -3,50 +3,82 @@
 let finalData = [];
 
 
+    function dataLength() {
+    // var nRow = $("#tblBuys tr").length;
+    let tablelength = $('#tblBuys tr').length;
 
-$(function() {
+    return tablelength;
+}
 
-    //Mostrar y esconder botones de agregar
-        $("#btnDelete").hide();
-        $("#btnSave").hide();
+    function saveForm() {
 
-        $("#btnPlus").click( function(){
-        $("#btnPlus").hide();
-        $("#btnDelete").show();
-        });
+    let tblBuys = document.getElementById('tblBuys');
+    let tblLength = dataLength();
+    const form1 = document.forms['form1'];
+    let nombre2= $("input:text[name=name]").val();
 
-    //Inicializando Botones
+    console.log(nombre2);
 
-    $("#btnPlus").click(function (){
-        insertRow();
-    });
-    $("#btnSave").click(function (){
-        saveRow();
-    });
-    $("#btnDelete").click(function (){
-        deleteRow();
-    });
+    const register = {
 
+        "name": $("input:text[name=name]").val(),
+        "active": $("input[type=checkbox][name=active]").val(),
+        "email": $("input[type=email][name=email]").val(),
+        "identification":$("input[type=number][name=identification]").val(),
+        "dayBirth": $("input[type=date][name=dayBirth]").val(),
 
+        products: []
 
+    };
 
+    /* "name": form1.elements[0].value,
+        "active": form1.elements[1].value,
+        "email": form1.elements[2].value,
+        "identification": form1.elements[4].value,
+        "dayBirth": form1.elements[5].value,*/
 
+    //Mostrar en consola Arreglo
 
+    console.log(register);
 
+    for (let i = 1; i < tblLength; i++) {
 
+        register.products.push(
+            {
+                'product': tblBuys.rows[i].cells[1].innerHTML,
+                'numberP': tblBuys.rows[i].cells[2].innerHTML,
+                'price': tblBuys.rows[i].cells[3].innerHTML,
+            }
+        );
 
+    }
+    return register;
+}
 
+    function printBill(data) {
 
-});
+    //Impresion en tabla
+
+    let tblResults = document.getElementById('tblResults').insertRow(0);
+    let cell1 = tblResults.insertCell(  0);
+    let cell2 = tblResults.insertCell(  1);
+    let cell3 = tblResults.insertCell(  2);
+    cell1.innerHTML = data.name;
+    cell2.innerHTML = data.identification;
+    cell3.innerHTML = data.products.length;
+
+}
 
     function process() {
 
-            let tblLength = datalength();
+            $('#tblResults').empty();
+
+            let tblLength = dataLength();
 
             //Hacer un objeto del formulario
             if (tblLength > 1) {
 
-                const register = saveform();
+                const register = saveForm();
                 printBill(register);
                 finalData.push(register);
                 console.log(finalData);
@@ -61,76 +93,10 @@ $(function() {
 
     }
 
-
-
-    function datalength() {
-       // var nRow = $("#tblBuys tr").length;
-       let tblLength = $('#tblBuys tr').length;
-
-        return tblLength;
-    }
-
-    function saveform() {
-
-        let tblBuys = document.getElementById('tblBuys');
-        let tblLength = datalength();
-        const form1 = document.forms['form1'];
-        let nombre2= $("input:text[name=name]").val();
-
-        console.log(nombre2);
-
-        const register = {
-
-            "name": $("input:text[name=name]").val(),
-            "active": $("input[type=checkbox][name=active]").val(),
-            "email": $("input[type=email][name=email]").val(),
-            "identification":$("input[type=number][name=identification]").val(),
-            "dayBirth": $("input[type=date][name=dayBirth]").val(),
-/*
-        "name": form1.elements[0].value,
-        "active": form1.elements[1].value,
-        "email": form1.elements[2].value,
-        "identification": form1.elements[4].value,
-        "dayBirth": form1.elements[5].value,*/
-        products: []
-        };
-
-        //Mostrar en consola Arreglo
-
-        console.log(register);
-
-        for (let i = 1; i < tblLength; i++) {
-
-            register.products.push(
-            {
-                'product': tblBuys.rows[i].cells[1].innerHTML,
-                'numberP': tblBuys.rows[i].cells[2].innerHTML,
-                'price': tblBuys.rows[i].cells[3].innerHTML,
-            }
-                );
-
-            }
-        return register;
-        }
-
-    function printBill(data) {
-
-    //Impresion en tabla
-
-    let tblResults = document.getElementById('tblResults').insertRow(0);
-    let cell1 = tblResults.insertCell(  0);
-    let cell2 = tblResults.insertCell(  1);
-    let cell3 = tblResults.insertCell(  2);
-    cell1.innerHTML = data.name;
-    cell2.innerHTML = data.identification;
-    cell3.innerHTML = data.products.length;
-
-    }
-
     function insertRow(){
 
             $("#btnSave").show();
-            let tblLength = datalength();
+            let tblLength = dataLength();
             let tblBuys = document.getElementById('tblBuys').insertRow(tblLength);
 
             let cell1 = tblBuys.insertCell(0);
@@ -152,22 +118,29 @@ $(function() {
 
         //Preguntar que numero de id quiera borrar
             let deletItem = parseInt(prompt('Digite en numero de registro que quiere eliminar:'));
+            console.log(deletItem);
 
-        //Eliminar row
+            //Eliminar row
             const tr = document.getElementById('tblBuys');
             tr.deleteRow(deletItem);
             window.alert('Dato ha sido Eliminado');
 
 
+            process();
+
+
     }
 
     function saveRow() {
+
         $("#btnSave").hide();
         //Obtener tabla y numero de rows
-        let tblLength = datalength();
+        let tblLength = dataLength();
+
         let tblBuys = document.getElementById('tblBuys');
 
         //Consultar Valores que se llenan en tablas
+
         let idProduct = document.getElementById(`idProduct${tblLength - 1}`).value;
         let product = document.getElementById(`product${tblLength - 1}`).value;
         let numberP = document.getElementById(`numberP${tblLength - 1}`).value;
@@ -183,6 +156,34 @@ $(function() {
 
 
     }
+
+
+    $(function() {
+
+    //Mostrar y esconder botones de agregar
+    $("#btnDelete").hide();
+    $("#btnSave").hide();
+
+    $("#btnPlus").click( function(){
+        $("#btnPlus").hide();
+        $("#btnDelete").show();
+    });
+
+    //Inicializando Botones
+
+    $("#btnPlus").click(function (){
+        insertRow();
+    });
+    $("#btnSave").click(function (){
+        saveRow();
+    });
+    $("#btnDelete").click(function (){
+        deleteRow();
+    });
+
+
+});
+
 
 
 
