@@ -1,6 +1,7 @@
 let finalData = [];
 let totalProduct = 0;
 
+
 function dataLength() {
     return $('#tblBuys tbody tr').length;
 }
@@ -13,17 +14,16 @@ function cleanForm() {
 
 function getProducts() {
     let data = [];
-    let rowCount = dataLength();
-
-    for (let i = 0; i < rowCount; i++) {
+    $('#tblBuys tbody tr').each(function (i, trHtml) {
         let row = {
             id: i,
-            productName: $(`#productName${i}`).val(),
-            quantity: $(`#quantity${i}`).val(),
-            price: $(`#price${i}`).val(),
+            productName: $(trHtml).find('td').eq(1).find('input').val(),
+            quantity: parseFloat($(trHtml).find('td').eq(2).find('input').val()),
+            price: parseFloat($(trHtml).find('td').eq(3).find('input').val()),
         };
+        console.log(row);
         data.push(row);
-    }
+    });
     return data;
 }
 
@@ -36,6 +36,7 @@ function saveForm() {
         dayBirth: $("#dayBirth").val(),
         total: totalProduct,
         products: getProducts()
+
     };
 
 }
@@ -50,7 +51,7 @@ function insertRow() {
     let rowCount = dataLength();
     let newRow = `
         <tr>
-            <td>${rowCount + 1}</td>
+            <td id="colId${rowCount}">${rowCount + 1}</td>
             <td><input type="text" id="productName${rowCount}" class="form-control" placeholder="Producto" required></td>
             <td><input type="number" id="quantity${rowCount}" class="form-control" placeholder="Cantidad" required></td>
             <td><input type="number" id="price${rowCount}" class="form-control" placeholder="Precio" required onblur="sumTotals()"></td>
@@ -61,6 +62,10 @@ function insertRow() {
         showTotal();
 }
 
+function printTotal() {
+    $('#totalR').html(totalProduct);
+}
+
 function saveData(invoiceData) {
     finalData.push(invoiceData);
     console.log(finalData);
@@ -68,52 +73,97 @@ function saveData(invoiceData) {
 
 function printResult() {
     $('#tblResult tbody').empty();
-    finalData.forEach((invoice) => {
+    finalData.forEach((invoice, index) => {
         let newRow = `
-        <tr>
-            <td>${invoice.dayBirth}</td>
-            <td>${invoice.name}</td>
-            <td>${invoice.products.length}</td>
-            <td>${invoice.total}</td>
-            <td><button type="button" class="btn btn-warning" onclick="editRow()">Editar</button></td>
-        </tr>
-    `;
+            <tr>
+                <td>${invoice.dayBirth}</td>
+                <td>${invoice.name}</td>
+                <td>${invoice.products.length}</td>
+                <td>${invoice.total}</td>
+                <td><button type="button" class="btn btn-warning" onclick="editRow(${index})">Editar</button></td>
+            </tr>
+        `;
         $('#tblResult tbody').append(newRow);
-    })
+    });
 }
 
-function editRow() {
+function sumTotals() {
+    let total = 0;
+
+    $('#tblBuys tbody tr').each(function (i, trHtml) {
+
+            let valor= parseFloat($(trHtml).find('td').eq(3).find('input').val());
+            total += valor;
+    });
+
+    totalProduct = total;
+    printTotal();
+
+}
+
+function insertRowEdit(row) {
+    finalData[row].products.forEach((product, i) => {
+        let newRow = `
+            <tr>
+                <td>${i+ 1}</td>
+                <td><input type="text" id="productName${i}" class="form-control" placeholder="Producto" required value="${product.productName}"></td>
+                <td><input type="number" id="quantity${i}" class="form-control" placeholder="Cantidad" required value="${product.quantity}"></td>
+                <td><input type="number" id="price${i}" class="form-control" placeholder="Precio" required oninput="sumTotals()" value="${product.price}"></td>
+                <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">Eliminar</button></td>
+            </tr>
+        `;
+        console.log(product, i);
+        $('#tblBuys tbody').append(newRow);
+    });
+    showTotal();
+    printTotal();
+}
+
+function editRow(index) {
 
 
-    $('#form1 #name').val(finalData[0].name).focus();
-    $('#form1 #email').val(finalData[0].email);
-    $('#form1 #identification').val(finalData[0].identification);
-    $('#form1 #dayBirth').val(finalData[0].dayBirth);
-    $('#form1 #isUserActive').is(finalData[0].isUserActive);
-    $('#totalR').val(finalData[0].total);
-    $('#tblResult').empty();
+   let buttonEdit=`<button id="editFinalD" type="submit"  
+        onClick="saveEditData(${index})" class="btn btn-warning">Guardar Edición</button>`;
 
+    $('#sendForm').hide();
+    $('#form1 #name').val(finalData[index].name).focus();
+    $('#form1 #email').val(finalData[index].email);
+    $('#form1 #identification').val(finalData[index].identification);
+    $('#form1 #dayBirth').val(finalData[index].dayBirth);
+    $('#form1 #isUserActive').is(finalData[index].isUserActive);
+    $('#totalR').val(finalData[index].total);
+    insertRowEdit(index);
+    console.log();
+    $('#buttonDiv').append(buttonEdit);
 
 
 }
 
 function deleteRow(deleteButton) {
+
     $(deleteButton).parent().parent().remove();
     sumTotals();
+
 }
 
-function sumTotals() {
-    let total = 0;
-    let rowCount = dataLength();
-    for (let i = 0; i < rowCount; i++) {
-        total += parseFloat($(`#price${i}`).val());
+function saveEditData(index){
+
+    if (dataLength() === 0) {
+
+
+    } else {
+        const register = saveForm();
+        finalData[index]=register;
+        console.log(finalData);
+        printResult();
+        cleanForm();
+        $('#sendForm').show();
     }
-    totalProduct = total;
-    printTotal();
-}
 
-function printTotal() {
-    $('#totalR').html(totalProduct);
+
+    $('#editFinalD').remove();
+
+
 }
 
 function submitForm() {
@@ -128,9 +178,11 @@ function submitForm() {
 }
 
 
+
 $(function() {
 
     $('#titleTotal').hide();
     $('#totalR').hide();
+
 
 });
