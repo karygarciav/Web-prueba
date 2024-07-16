@@ -2,6 +2,7 @@ let finalData = [];
 let totalProduct = 0;
 
 
+
 function dataLength() {
     return $('#tblBuys tbody tr').length;
 }
@@ -121,6 +122,16 @@ function insertRowEdit(row) {
 
 function editRow(index) {
 
+    Swal.fire({
+        title: 'Uploading...',
+        html: 'Please wait...',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        timer : 1000,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
 
    let buttonEdit=`<button id="editFinalD" type="submit"  
         onClick="saveEditData(${index})" class="btn btn-warning">Guardar Edición</button>`;
@@ -135,6 +146,7 @@ function editRow(index) {
     insertRowEdit(index);
     console.log();
     $('#buttonDiv').append(buttonEdit);
+
 
 
 }
@@ -158,6 +170,7 @@ function saveEditData(index){
         printResult();
         cleanForm();
         $('#sendForm').show();
+        swalSave();
     }
 
 
@@ -166,23 +179,54 @@ function saveEditData(index){
 
 }
 
+function swalSave(){
+
+    swal.fire({
+        title: 'GUARDADO',
+        icon: 'success',
+        timer: 1500,
+        backdrop :true,
+
+    });
+
+}
+
 function submitForm() {
     if (dataLength() === 0) {
-        alert('Tiene que guardar al menos un dato de compra');
+
+      swal.fire({
+           title: 'ERROR',
+            text:'No se puede guardar sin datos en la compra',
+            icon: 'error',
+            backdrop :true,
+
+        });
+
+
     } else {
         const register = saveForm();
         saveData(register);
         printResult();
         cleanForm();
+        swalSave();
     }
 }
 
 
-
 $(function() {
+
 
     $('#titleTotal').hide();
     $('#totalR').hide();
 
 
+
 });
+
+window.onload = function() {
+    this.setTimeout(() => {
+        $("#preloader").fadeOut();
+    },500);
+
+};
+
