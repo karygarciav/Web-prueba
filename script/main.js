@@ -1,222 +1,232 @@
-
-
 let finalData = [];
-let delet=false;
+let totalProduct = 0;
 
-    function dataLength() {
-    // var nRow = $("#tblBuys tr").length;
-    let tablelength = $('#tblBuys tr').length;
 
-    return tablelength;
+
+function dataLength() {
+    return $('#tblBuys tbody tr').length;
 }
 
-    function saveForm() {
+function cleanForm() {
+    $('#form1')[0].reset();
+    $('#tblBuys tbody').empty();
+    $('#totalR').empty();
+}
 
-    let tblBuys = $('#tblBuys')[0];
-    let tblLength = dataLength();
-    const register = {
+function getProducts() {
+    let data = [];
+    $('#tblBuys tbody tr').each(function (i, trHtml) {
+        let row = {
+            id: i,
+            productName: $(trHtml).find('td').eq(1).find('input').val(),
+            quantity: parseFloat($(trHtml).find('td').eq(2).find('input').val()),
+            price: parseFloat($(trHtml).find('td').eq(3).find('input').val()),
+        };
+        console.log(row);
+        data.push(row);
+    });
+    return data;
+}
 
-        "name": $("input:text[name=name]").val(),
-        "active": $("input[type=checkbox][name=active]").val(),
-        "email": $("input[type=email][name=email]").val(),
-        "identification":$("input[type=number][name=identification]").val(),
-        "dayBirth": $("input[type=date][name=dayBirth]").val(),
-
-        products: []
+function saveForm() {
+    return {
+        name: $("#name").val(),
+        isUserActive: $("#isUserActive").is(":checked"),
+        email: $("#email").val(),
+        identification: $("#identification").val(),
+        dayBirth: $("#dayBirth").val(),
+        total: totalProduct,
+        products: getProducts()
 
     };
-    $('#sendForm').hide();
-    delet=true;
-
-    /* "name": form1.elements[0].value,
-        "active": form1.elements[1].value,
-        "email": form1.elements[2].value,
-        "identification": form1.elements[4].value,
-        "dayBirth": form1.elements[5].value,*/
-
-    //Mostrar en consola Arreglo
-
-    console.log(register);
-
-    for (let i = 1; i < tblLength; i++) {
-
-        register.products.push(
-            {
-                'idProduc':tblBuys.rows[i].cells[0].innerHTML,
-                'product': tblBuys.rows[i].cells[1].innerHTML,
-                'numberP': tblBuys.rows[i].cells[2].innerHTML,
-                'price': tblBuys.rows[i].cells[3].innerHTML,
-            }
-        );
-
-    }
-
-    return register;
-}
-
-    function printBill(data) {
-
-    //Impresion en tabla
-
-    let tblResults = document.getElementById('tblResults').insertRow(0);
-    let cell1 = tblResults.insertCell(  0);
-    let cell2 = tblResults.insertCell(  1);
-    let cell3 = tblResults.insertCell(  2);
-    cell1.innerHTML = data.name;
-    cell2.innerHTML = data.identification;
-    cell3.innerHTML = data.products.length;
 
 }
 
-    function process() {
+function showTotal() {
 
+    $('#titleTotal').show();
+    $('#totalR').show();
+}
 
+function insertRow() {
+    let rowCount = dataLength();
+    let newRow = `
+        <tr>
+            <td id="colId${rowCount}">${rowCount + 1}</td>
+            <td><input type="text" id="productName${rowCount}" class="form-control" placeholder="Producto" required></td>
+            <td><input type="number" id="quantity${rowCount}" class="form-control" placeholder="Cantidad" required></td>
+            <td><input type="number" id="price${rowCount}" class="form-control" placeholder="Precio" required onblur="sumTotals()"></td>
+            <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">Eliminar</button></td>
+        </tr>
+    `;
+        $('#tblBuys tbody').append(newRow);
+        showTotal();
+}
 
-            let tblLength = dataLength();
+function printTotal() {
+    $('#totalR').html(totalProduct);
+}
 
-            //Hacer un objeto del formulario
-            if (tblLength > 1) {
-
-                const register = saveForm();
-
-                    printBill(register);
-                    finalData.push(register);
-                    console.log(finalData);
-
-
-            } else {
-
-                window.alert('Tiene que guardar al menos un dato de compra');
-
-            }
-
-
-
-    }
-
-    function insertRow(){
-
-            $('#btnSave').show();
-            let tblLength = dataLength();
-            let tblBuys = document.getElementById('tblBuys').insertRow(tblLength);
-
-            let cell1 = tblBuys.insertCell(0);
-            let cell2 = tblBuys.insertCell(1);
-            let cell3 = tblBuys.insertCell(2);
-            let cell4 = tblBuys.insertCell(3);
-
-            cell1.innerHTML = `<input disabled type='number' name='idProduct' id=idProduct${tblLength}  value= ${tblLength} class='form-control'>`;
-            cell2.innerHTML = `<input type='text' name='datoProducto' id=product${tblLength}  class='form-control'>`;
-            cell3.innerHTML = `<input type='number' name='datoNumero' id=numberP${tblLength}  class='form-control'>`;
-            cell4.innerHTML = `<input type='number' name='price' id=price${tblLength} class='form-control'>`;
-
-
-
-
-    }
-
-    function printDelet(){
-
-    let tbody = $('#tblResults')[0].insertRow();
-
-    let cell1 = tbody.insertCell(  0);
-    let cell2 = tbody.insertCell(  1);
-    let cell3 = tbody.insertCell(  2);
-
-    cell1.innerHTML = finalData[0].name;
-    cell2.innerHTML = finalData[0].identification;
-    cell3.innerHTML = finalData[0].products.length;
-
+function saveData(invoiceData) {
+    finalData.push(invoiceData);
     console.log(finalData);
+}
+
+function printResult() {
+    $('#tblResult tbody').empty();
+    finalData.forEach((invoice, index) => {
+        let newRow = `
+            <tr>
+                <td>${invoice.dayBirth}</td>
+                <td>${invoice.name}</td>
+                <td>${invoice.products.length}</td>
+                <td>${invoice.total}</td>
+                <td><button type="button" class="btn btn-warning" onclick="editRow(${index})">Editar</button></td>
+            </tr>
+        `;
+        $('#tblResult tbody').append(newRow);
+    });
+}
+
+function sumTotals() {
+    let total = 0;
+
+    $('#tblBuys tbody tr').each(function (i, trHtml) {
+
+            let valor= parseFloat($(trHtml).find('td').eq(3).find('input').val());
+            total += valor;
+    });
+
+    totalProduct = total;
+    printTotal();
 
 }
 
-    function deleteRow() {
-        //Preguntar que numero de id quiera borrar
-        let deletItem = parseInt(prompt('Digite en numero de registro que quiere eliminar:'));
-        console.log(deletItem);
-        const tr = document.getElementById('tblBuys');
-        tr.deleteRow(deletItem);
+function insertRowEdit(row) {
+    finalData[row].products.forEach((product, i) => {
+        let newRow = `
+            <tr>
+                <td>${i+ 1}</td>
+                <td><input type="text" id="productName${i}" class="form-control" placeholder="Producto" required value="${product.productName}"></td>
+                <td><input type="number" id="quantity${i}" class="form-control" placeholder="Cantidad" required value="${product.quantity}"></td>
+                <td><input type="number" id="price${i}" class="form-control" placeholder="Precio" required oninput="sumTotals()" value="${product.price}"></td>
+                <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">Eliminar</button></td>
+            </tr>
+        `;
+        console.log(product, i);
+        $('#tblBuys tbody').append(newRow);
+    });
+    showTotal();
+    printTotal();
+}
 
-        if (delet) {
+function editRow(index) {
+
+    Swal.fire({
+        title: 'Uploading...',
+        html: 'Please wait...',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        timer : 1000,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
+
+   let buttonEdit=`<button id="editFinalD" type="submit"  
+        onClick="saveEditData(${index})" class="btn btn-warning">Guardar Edición</button>`;
+
+    $('#sendForm').hide();
+    $('#form1 #name').val(finalData[index].name).focus();
+    $('#form1 #email').val(finalData[index].email);
+    $('#form1 #identification').val(finalData[index].identification);
+    $('#form1 #dayBirth').val(finalData[index].dayBirth);
+    $('#form1 #isUserActive').is(finalData[index].isUserActive);
+    $('#totalR').val(finalData[index].total);
+    insertRowEdit(index);
+    console.log();
+    $('#buttonDiv').append(buttonEdit);
 
 
-            finalData[0].products.splice(deletItem, 1);
-            window.alert('Dato ha sido Eliminado');
-            $('#tblResults').empty();
-            printDelet();
 
-        }
+}
+
+function deleteRow(deleteButton) {
+
+    $(deleteButton).parent().parent().remove();
+    sumTotals();
+
+}
+
+function saveEditData(index){
+
+    if (dataLength() === 0) {
 
 
+    } else {
+        const register = saveForm();
+        finalData[index]=register;
+        console.log(finalData);
+        printResult();
+        cleanForm();
+        $('#sendForm').show();
+        swalSave();
     }
 
-    function saveRow() {
 
-        $('#btnSave').hide();
-        //Obtener tabla y numero de rows
-        let tblLength = dataLength();
-
-        let tblBuys = document.getElementById('tblBuys');
-
-        //Consultar Valores que se llenan en tablas
-
-        let idProduct = document.getElementById(`idProduct${tblLength - 1}`).value;
-        let product = document.getElementById(`product${tblLength - 1}`).value;
-        let numberP = document.getElementById(`numberP${tblLength - 1}`).value;
-        let price = document.getElementById(`price${tblLength - 1}`).value;
-
-        //Asignar en tabla valores
-        tblBuys.rows[tblLength - 1].cells[0].innerHTML = idProduct;
-        tblBuys.rows[tblLength - 1].cells[1].innerHTML = product;
-        tblBuys.rows[tblLength - 1].cells[2].innerHTML = numberP;
-        tblBuys.rows[tblLength - 1].cells[3].innerHTML = price;
-
-        $('#btnPlus').show();
+    $('#editFinalD').remove();
 
 
+}
+
+function swalSave(){
+
+    swal.fire({
+        title: 'GUARDADO',
+        icon: 'success',
+        timer: 1500,
+        backdrop :true,
+
+    });
+
+}
+
+function submitForm() {
+    if (dataLength() === 0) {
+
+      swal.fire({
+           title: 'ERROR',
+            text:'No se puede guardar sin datos en la compra',
+            icon: 'error',
+            backdrop :true,
+
+        });
+
+
+    } else {
+        const register = saveForm();
+        saveData(register);
+        printResult();
+        cleanForm();
+        swalSave();
     }
+}
 
 
+$(function() {
 
 
-    $(function() {
+    $('#titleTotal').hide();
+    $('#totalR').hide();
 
-    //Mostrar y esconder botones de agregar
-    $('#btnDelete').hide();
-    $('#btnSave').hide();
-
-    $('#btnPlus').click( function(){
-        $('#btnPlus').hide();
-        $('#btnDelete').show();
-    });
-
-    //Inicializando Botones
-    $('#sendForm').click( function(){
-        process();
-    }) ;
-
-    $('#btnPlus').click(function (){
-        insertRow();
-    });
-    $('#btnSave').click(function (){
-        saveRow();
-    });
-    $('#btnDelete').click(function (){
-        deleteRow();
-    });
 
 
 });
 
+window.onload = function() {
+    this.setTimeout(() => {
+        $("#preloader").fadeOut();
+    },500);
 
-
-
-
-
-
-
-
-
-
+};
 
